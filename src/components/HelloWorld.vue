@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
     <p>
@@ -37,10 +37,74 @@ export default {
     msg: String
   }
 }
+</script> -->
+
+<template>
+  <div class="data">
+    <h1>Asset List</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Asset name</th>
+          <th>Department</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(department, asset) in assets" :key="asset">
+          <td>{{ asset }}</td>
+          <td>{{ department }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="button-container">
+    <button @click="downloadCSV">Download CSV</button>
+  </div>
+</template>
+
+<script>
+import Papa from 'papaparse';
+
+export default {
+  data() {
+    return {
+      assets: {
+        'Printer': 'HR',
+        'Monitor': 'IT',
+        'Barcode Scanner': 'ACCOUNT',
+      },
+    };
+  },
+  methods: {
+    downloadCSV() {
+      const csvData = Papa.unparse(Object.entries(this.assets));
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', 'assets.csv');
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+  },
+};
 </script>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
+table{
+  border-collapse: collapse;
+  width: 70%;
+  margin: auto;
+}
+th, td{
+  border: solid 1px black;
+  padding: 8px;
+}
 h3 {
   margin: 40px 0 0;
 }
@@ -54,5 +118,9 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.button-container {
+  padding: 30px;
 }
 </style>
